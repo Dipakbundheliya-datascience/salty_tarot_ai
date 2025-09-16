@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv
+.env
+venv/
+
+# Logs
+*.log
