@@ -8,12 +8,7 @@ class HoroscopeRequest(BaseModel):
 
 class HoroscopeResponse(BaseModel):
     """Ultra simple response - just the horoscope text"""
-    horoscope: str
-
-class ErrorResponse(BaseModel):
-    """Simple error response"""
-    error: str
-    message: str
+    horoscope: str 
 
 class HealthResponse(BaseModel):
     """Health check response"""

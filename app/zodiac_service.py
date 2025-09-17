@@ -1,5 +1,6 @@
 from datetime import datetime
 from app.config import settings
+from app.logger import logger
 
 class ZodiacService:
     """Simple zodiac sign calculator for FREE plan"""
@@ -19,6 +20,7 @@ class ZodiacService:
                 if sign_name == "Capricorn":
                     # Special case: Dec 22 - Jan 19 (crosses year boundary)
                     if (month == 12 and day >= 22) or (month == 1 and day <= 19):
+                        logger.info(f"Calculated zodiac sign: {sign_name} for {birth_date_str}")
                         return sign_name
                 else:
                     start_month = sign_info[1]
@@ -29,12 +31,15 @@ class ZodiacService:
                     # Check if date falls in this sign's range
                     if (month == start_month and day >= start_day) or \
                        (month == end_month and day <= end_day):
+                        logger.info(f"Calculated zodiac sign: {sign_name} for {birth_date_str}")
                         return sign_name
             
             # Fallback (shouldn't happen)
+            logger.warning(f"Could not determine zodiac sign for {birth_date_str}, defaulting to Capricorn")
             return "Capricorn"
             
-        except ValueError:
+        except ValueError as e:
+            logger.error(f"Invalid birth date format: {birth_date_str}")
             raise ValueError("Invalid birth date format. Use YYYY-MM-DD")
     
     def get_zodiac_traits(self, zodiac_sign: str) -> dict:
@@ -55,8 +60,8 @@ class ZodiacService:
                 return False, "Birth date cannot be in the future"
             
             # Check reasonable year range
-            # if birth_date.year < 1900:
-            #     return False, "Birth date must be after 1900"
+            if birth_date.year < 1900:
+                return False, "Birth date must be after 1900"
             
             return True, ""
             

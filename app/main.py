@@ -1,11 +1,11 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware 
 import uvicorn
 
 from app.config import settings
-from app.models import HoroscopeRequest, HoroscopeResponse, ErrorResponse, HealthResponse
+from app.models import HoroscopeRequest, HoroscopeResponse, HealthResponse
 from app.horoscope_service import horoscope_service
+from app.logger import logger
 
 # Create FastAPI app
 app = FastAPI(
@@ -27,6 +27,7 @@ app.add_middleware(
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Simple health check"""
+    logger.info("Health check requested")
     return HealthResponse(
         status="healthy",
         version=settings.VERSION
@@ -36,19 +37,24 @@ async def health_check():
 @app.post("/horoscope", response_model=HoroscopeResponse)
 async def generate_horoscope(horoscope_request: HoroscopeRequest):
     """Generate daily horoscope for FREE users"""
+    logger.info(f"Horoscope request: birth_date={horoscope_request.birth_date}, user_name={horoscope_request.user_name}")
+    
     try:
         # Generate horoscope using the service
         response = horoscope_service.generate_daily_horoscope(horoscope_request)
+        logger.info(f"Horoscope generated successfully for zodiac: {response.horoscope[:50]}...")
         return response
         
     except ValueError as e:
         # Validation errors (bad date format, future date, etc.)
+        logger.warning(f"Validation error: {str(e)} for birth_date={horoscope_request.birth_date}")
         raise HTTPException(
             status_code=400,
             detail=f"Invalid request: {str(e)}"
         )
     except Exception as e:
         # General errors (API failure, etc.)
+        logger.error(f"Unexpected error generating horoscope: {str(e)} for birth_date={horoscope_request.birth_date}")
         raise HTTPException(
             status_code=500,
             detail=f"Unable to generate horoscope: {str(e)}"
@@ -58,6 +64,7 @@ async def generate_horoscope(horoscope_request: HoroscopeRequest):
 @app.get("/")
 async def root():
     """API information"""
+    logger.info("API info requested")
     return {
         "message": "Free Daily Horoscope API",
         "version": settings.VERSION,
@@ -67,6 +74,20 @@ async def root():
         },
         "plan": "FREE"
     }
+
+# Startup event
+@app.on_event("startup")
+async def startup_event():
+    """Log application startup"""
+    logger.info(f"🌟 {settings.APP_NAME} v{settings.VERSION} starting up")
+    logger.info(f"Debug mode: {settings.DEBUG}")
+    logger.info(f"Gemini model: {settings.GEMINI_MODEL}")
+
+# Shutdown event  
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Log application shutdown"""
+    logger.info("🛑 Horoscope API shutting down")
 
 # Run the app
 if __name__ == "__main__":
