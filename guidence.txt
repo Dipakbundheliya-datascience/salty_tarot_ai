@@ -1,0 +1,11 @@
+app/
+├── config.py           # Basic settings & env variables
+├── models.py           # Simple request/response models  
+├── zodiac_service.py   # Calculate zodiac sign from DOB
+├── gemini_client.py    # Gemini API integration
+├── horoscope_service.py# Main business logic
+├── main.py            # FastAPI app & endpoints
+├── horoscope_prompt.txt# Prompt for Gemini
+└── database.py        # Simple SQLite for history (optional)
+
+# RUN command :  uvicorn app.main:app --reload --host 0.0.0.0 --port 8000

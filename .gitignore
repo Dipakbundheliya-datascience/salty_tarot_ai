@@ -11,3 +11,7 @@ venv/
 
 # Logs
 *.log
+
+# Test files
+/app/test_images
+/app/test.py
