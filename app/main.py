@@ -1,11 +1,12 @@
+import time
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware 
-import uvicorn
 
-from app.config import settings
-from app.models import HoroscopeRequest, HoroscopeResponse, HealthResponse
-from app.horoscope_service import horoscope_service
 from app.logger import logger
+from app.config import settings
+from app.horoscope_service import horoscope_service
+from app.models import HoroscopeRequest, HoroscopeResponse, HealthResponse
 
 # Create FastAPI app
 app = FastAPI(
@@ -37,12 +38,17 @@ async def health_check():
 @app.post("/horoscope", response_model=HoroscopeResponse)
 async def generate_horoscope(horoscope_request: HoroscopeRequest):
     """Generate daily horoscope for FREE users"""
+    request_start_time = time.time() 
     logger.info(f"Horoscope request: birth_date={horoscope_request.birth_date}, user_name={horoscope_request.user_name}")
     
     try:
         # Generate horoscope using the service
-        response = horoscope_service.generate_daily_horoscope(horoscope_request)
-        logger.info(f"Horoscope generated successfully for zodiac: {response.horoscope[:50]}...")
+        response = await horoscope_service.generate_daily_horoscope(horoscope_request)
+       
+        request_end_time = time.time()
+        total_time = round(request_end_time - request_start_time, 2)  # ← ADD THIS LINE
+        logger.info(f"🎉 Request completed in {total_time}s for user: {horoscope_request.user_name} | Horoscope: {response.horoscope[:50]}...")
+
         return response
         
     except ValueError as e:

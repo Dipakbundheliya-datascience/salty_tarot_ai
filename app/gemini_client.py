@@ -1,4 +1,4 @@
-import os
+import asyncio
 from google import genai
 from app.config import settings
 from datetime import datetime
@@ -41,7 +41,7 @@ class GeminiClient:
                         Make it inspiring and positive while being specific to {zodiac_sign} traits.
                     """
     
-    def generate_horoscope(self, zodiac_sign: str, zodiac_traits: dict, user_name: str = None) -> str:
+    async def generate_horoscope(self, zodiac_sign: str, zodiac_traits: dict, user_name: str = None) -> str:
         """Generate horoscope using Gemini API"""
         logger.info(f"Generating horoscope for {zodiac_sign}, user: {user_name}")
         
@@ -71,9 +71,18 @@ class GeminiClient:
             logger.info(f"Calling Gemini API with model: {settings.GEMINI_MODEL}")
             
             # Call Gemini API
-            response = self.client.models.generate_content(
-                model=settings.GEMINI_MODEL,
-                contents=[formatted_prompt]
+            # response = self.client.models.generate_content(
+            #     model=settings.GEMINI_MODEL,
+            #     contents=[formatted_prompt]
+            # )
+
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None,
+                lambda: self.client.models.generate_content(
+                    model=settings.GEMINI_MODEL,
+                    contents=[formatted_prompt]
+                )
             )
             
             horoscope_text = response.text.strip()

@@ -6,7 +6,7 @@ from app.logger import logger
 class HoroscopeService:
     """Main service for FREE plan horoscope generation"""
     
-    def generate_daily_horoscope(self, request: HoroscopeRequest) -> HoroscopeResponse:
+    async def generate_daily_horoscope(self, request: HoroscopeRequest) -> HoroscopeResponse:
         """Generate complete horoscope response"""
         logger.info(f"Starting horoscope generation for birth_date: {request.birth_date}")
         
@@ -25,7 +25,7 @@ class HoroscopeService:
             logger.info(f"Retrieved traits for {zodiac_sign}: {zodiac_traits.get('element')} element")
             
             # Step 4: Generate horoscope using Gemini
-            horoscope_text = gemini_client.generate_horoscope(
+            horoscope_text = await gemini_client.generate_horoscope(
                 zodiac_sign=zodiac_sign,
                 zodiac_traits=zodiac_traits,
                 user_name=request.user_name
