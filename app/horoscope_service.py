@@ -33,7 +33,8 @@ class HoroscopeService:
             
             # Step 5: Create ultra simple response (just horoscope text)
             response = HoroscopeResponse(
-                horoscope=horoscope_text
+                horoscope=horoscope_text,
+                zodiac_sign=zodiac_sign
             )
             
             logger.info(f"Horoscope generation completed successfully for {zodiac_sign}")

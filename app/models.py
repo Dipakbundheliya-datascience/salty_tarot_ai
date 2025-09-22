@@ -9,6 +9,7 @@ class HoroscopeRequest(BaseModel):
 class HoroscopeResponse(BaseModel):
     """Ultra simple response - just the horoscope text"""
     horoscope: str 
+    zodiac_sign: str
 
 class HealthResponse(BaseModel):
     """Health check response"""

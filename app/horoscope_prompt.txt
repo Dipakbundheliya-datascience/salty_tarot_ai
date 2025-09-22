@@ -8,7 +8,7 @@ USER PROFILE:
 - User Name: {user_name}
 
 REQUIREMENTS:
-- Write exactly 2 paragraphs (3-5 sentences each)
+- Write exactly 5 paragraphs (2 sentences each)
 - Use user's name once at the beginning, then use "you" 
 - Address 2-3 life areas: work/career, relationships, money, health, or personal growth
 - Include 1-2 pieces of specific actionable advice
