@@ -11,13 +11,13 @@ class Settings:
     APP_NAME: str = "Free Daily Horoscope API"
     VERSION: str = "1.0.0"
     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
-    
+
     # Gemini API
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY")
     GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     
     # File Paths
-    PROMPT_PATH: str = "app/horoscope_prompt.txt"
+    PROMPT_PATH: str = "app/horoscope_paid_prompt.txt"
     
     # Rate Limiting (FREE plan limits)
     RATE_LIMIT_REQUESTS: int = int(os.getenv("RATE_LIMIT_REQUESTS", "5"))  # 5 requests per minute for free
