@@ -93,7 +93,7 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """Log application shutdown"""
-    logger.info("🛑 Horoscope API shutting down")
+    logger.info("🛑 Horoscope API shutting down.")
 
 # Run the app
 if __name__ == "__main__":
